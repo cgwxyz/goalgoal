@@ -1,0 +1,30 @@
+<view class="page">
+    <view class="page__hd">
+        <view class="page__title">{{sche_date}} {{sche_time}}</view>
+        <view class="page__desc">{{sche_area}}</view>
+    </view>
+    <view class="page__bd">
+        <view class="weui-panel weui-panel_access">
+            <view class="weui-panel__hd">已报名({{joined_count}})</view>
+            <view class="weui-panel__bd weui-flex joined_list">
+                <block wx:for="{{joined_ulist}}" wx:key="openid" >
+                  <view class="userinfo weui-flex__item">
+                      <image class="userinfo-avatar" src="{{item.avatar}}"></image>
+                      <text class="userinfo-nickname">{{item.name}}</text>
+                  </view>
+                </block>
+            </view>
+        </view>
+        <view class="weui-btn-area">
+          <button type="primary" bindtap='goBack'>返回</button>
+        </view>
+    </view>
+    
+    <view>
+        <loading wx:if="{{showLoading}}">加载中</loading>
+    </view>
+
+    <view class="weui-footer">
+       <view class="weui-footer__text">© 2018 tnwithus.com</view>
+    </view>
+</view>

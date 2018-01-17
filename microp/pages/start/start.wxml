@@ -1,0 +1,78 @@
+<!--index.wxml-->
+<view class="page">
+<form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="page__hd">
+        <view class="page__title">约战</view>
+        <view class="page__desc">请设定时间、场馆地点</view>
+    </view>
+    <view class="page__bd">
+
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+            <view class="weui-label">日期</view>
+        </view>
+        <view class="weui-cell__bd">
+            <picker mode="date" value="{{date}}" start="{{today}}" end="{{next_month}}" bindchange="bindDateChange" fields='day'>
+                <view name="sche_date" class="weui-input">{{date}}</view>
+            </picker>
+        </view>
+      </view>
+
+    <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+            <view class="weui-label">开始时间</view>
+        </view>
+        <view class="weui-cell__bd">
+            <picker mode="time" value="{{start_time}}" start="07:00" end="23:00" bindchange="bindStartTimeChange">
+                <view class="weui-input">{{start_time}}</view>
+            </picker>
+        </view>
+    </view>
+
+    <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+            <view class="weui-label">地点</view>
+        </view>
+        <view class="weui-cell__bd">
+          <view class="weui-input input_area" value="{{area}}" bindtap='gotoChooseLocation'>
+              <block wx:if="{{area}}">{{area}}</block>
+              <block wx:else>请选择场馆所在地</block>
+          </view>
+        </view>
+    </view>
+
+    <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+            <view class="weui-label">组织者</view>
+        </view>
+
+        <view class="weui-cell__bd">
+            <input class="weui-input"  bindblur="getContactName"  value="{{host_name}}" type="text" confirm-type='next' placeholder="请输入组织者昵称"/>
+        </view>
+    </view>
+
+    <view class="weui-cells__title">注意事项</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+          <view class="weui-cell__bd">
+              <textarea bindinput="handleRemarkInput" value="{{remark}}" maxlength="{{remark_max_length}}" class="weui-textarea" placeholder="请输入注意事项" style="height: 3.3em" />
+              <view class="weui-textarea-counter">{{remark_length}}/{{remark_max_length}}</view>
+          </view>
+      </view>
+    </view>
+
+    <view class="weui-btn-area">
+      <button formType="submit" type="primary">发布</button>
+    </view>
+
+    <view >
+        <loading wx:if="{{showLoading}}">加载中</loading>
+    </view>
+
+  </view>
+</form>
+
+<view class="weui-footer">
+       <view class="weui-footer__text">© 2018 tnwithus.com</view>
+  </view>
+</view>

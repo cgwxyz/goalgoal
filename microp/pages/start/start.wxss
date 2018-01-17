@@ -1,0 +1,6 @@
+/* pages/start/start.wxss */
+.input_area{
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}

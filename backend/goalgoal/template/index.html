@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>聊天室</title>
+</head>
+<body>
+    <div id="contents" style="height:500px;overflow:auto;"></div>
+    <div>
+        <textarea id="msg"></textarea>
+        <a href="javascript:;" onclick="sendMsg()">发送</a>
+    </div>
+    <script src="{{static_url('js/jquery.min.js')}}"></script>
+    <script type="text/javascript">
+        var ws = new WebSocket("wss://microp.tnwithus.com/chat");
+        ws.onmessage = function(e) {
+            $("#contents").append("<p>" + e.data + "</p>");
+        }
+        function sendMsg() {
+            var msg = $("#msg").val();
+            ws.send(msg);
+            $("#msg").val("");
+        }
+    </script>
+</body>
+</html>

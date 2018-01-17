@@ -1,0 +1,29 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: line;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 20px;
+}
+.bt_view{
+  margin-top:10px;
+}
+.bt{
+  width:400rpx;
+  margin-top:20rpx;
+}
+

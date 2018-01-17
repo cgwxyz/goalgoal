@@ -1,0 +1,18 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo">...</button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+    </block>
+  </view>
+
+  <view class="bt_view">
+    <button class="bt" bindtap="gotoSchedule" type="primary">约战</button>
+    <button class="bt" bindtap="gotoHistory">历史记录</button>
+  </view>
+
+  <view class="weui-footer weui-footer_fixed-bottom">
+       <view class="weui-footer__text">© 2018 tnwithus.com</view>
+  </view>
+</view>
