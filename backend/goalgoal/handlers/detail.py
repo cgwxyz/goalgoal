@@ -99,4 +99,12 @@ class DetailHandler(RequestHandler):
             finally:
                 pass
         else:
-            self.write(utils.echoJson(301, '您已经报名了,请勿重复提交'))
+            if join_info['status'] == 0:#has give up,re joinin, update status and t_join
+                result = yield curr_join_col.update_one({'sche_id': pid, 'openid': openid, 'status': 0}, \
+                                                        {'$set': {'status': 1,'t_join': int(time.time())}})
+                if result.modified_count == 1:
+                    self.write(json.dumps({'code': 200}))
+                else:
+                    self.write(utils.echoJson(0, '内部错误,#10050'))
+            else:
+                self.write(utils.echoJson(301, '您已经报名了,请勿重复提交'))

@@ -60,7 +60,7 @@ class JoinedHandler(RequestHandler):
                                          curr_join_col.find_one({'openid': openid, 'sche_id': pid})]
         if join_info is None:
             #goto add
-            rs = curr_join_col.insert_one({"sche_id": pid,'status': 1,'openid': openid,'name': name,\
+            rs = curr_join_col.insert_one({"sche_id": pid, 'status': 1,'openid': openid,'name': name,\
                                            'avatar': avatar, 't_join': int(time.time())})
             try:
                 final_rs = {'code': 200}

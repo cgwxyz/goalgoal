@@ -31,7 +31,7 @@ class ScheduleHandler(RequestHandler):
                 return
 
             final_rs = {'code': 200, 'joined_list': []}
-            joined_top4_list_cursor = curr_join_col.find({'sche_id':pid,'status':1}).sort([('t_join', -1)]).limit(1000)
+            joined_top4_list_cursor = curr_join_col.find({'sche_id': pid, 'status':1}).sort([('t_join', -1)]).limit(1000)
             while(yield joined_top4_list_cursor.fetch_next):
                 document = joined_top4_list_cursor.next_object()
                 if document is not None:
@@ -39,8 +39,9 @@ class ScheduleHandler(RequestHandler):
             self.write(dumps(final_rs))
 
         elif action == 'history':
-            final_rs = {'code': 200, 'list': []}
+            final_rs = {'code': 200, 'list': [], 'join_list': []}
             joined_top4_list_cursor = curr_col.find({'host_id': openid}).sort([('t_add', -1)]).limit(100)
+            my_joined_list_cursor = curr_join_col.find({'openid': openid, 'status': 1}).sort([('t_join', -1)]).limit(100)
             now = int(time.time())
             while(yield joined_top4_list_cursor.fetch_next):
                 document = joined_top4_list_cursor.next_object()
@@ -49,12 +50,31 @@ class ScheduleHandler(RequestHandler):
                     sche_timestamp = int(time.mktime(time.strptime(sche_time_str, "%Y-%m-%d %H:%M:%S")))
                     document['hasPast'] = 1 if sche_timestamp < now else 0
                     final_rs['list'].append(document)
+
+            joined_pid = []
+            while (yield my_joined_list_cursor.fetch_next):
+                document = my_joined_list_cursor.next_object()
+                if document is not None:
+                    joined_pid.append(ObjectId(document['sche_id']))
+
+            if len(joined_pid) > 0:
+                joined_list_cursor = curr_col.find({'_id': {'$in': joined_pid}}).sort(
+                    [('t_add', -1)]).limit(100)
+
+                while (yield joined_list_cursor.fetch_next):
+                    document = joined_list_cursor.next_object()
+                    sche_time_str = '%s %s:00' % (document['date'], document['time'])
+                    sche_timestamp = int(time.mktime(time.strptime(sche_time_str, "%Y-%m-%d %H:%M:%S")))
+                    document['hasPast'] = 1 if sche_timestamp < now else 0
+                    final_rs['join_list'].append(document)
+
             self.write(dumps(final_rs))
+
         else: #detail
             if pid == '':
                 self.write(utils.echoJson(0, 'no primary_id received'))
                 return
-            data_info, my_join_info, joined_count = yield [curr_col.find_one({'_id':ObjectId(pid)}),\
+            data_info, my_join_info, joined_count = yield [curr_col.find_one({'_id': ObjectId(pid)}),\
                                         curr_join_col.find_one({'openid': openid, 'sche_id': pid, 'status': 1}),\
                                         curr_join_col.find({'sche_id': pid, 'status': 1}).count()]
 
@@ -115,12 +135,12 @@ class ScheduleHandler(RequestHandler):
             return
 
         address = self.get_argument('address', '')
-        if sche_time == '':
+        if address == '':
             self.write(utils.echoJson(0, '请选择场馆地点'))
             return
 
         contact = self.get_argument('host_name', '')
-        if sche_time == '':
+        if contact == '':
             self.write(utils.echoJson(0, '请输入组织者昵称'))
             return
 
