@@ -35,35 +35,31 @@
           <view class="weui-article__section">
               <view class="weui-article__p">
                 <form bindsubmit="formSubmit" bindreset="formReset" report-submit='true'>
-                  <view class="weui-cell weui-cell_input" wx:if="{{!hasPast && !hasJoined}}">
+                    <view class="weui-cell weui-cell_input">
                       <view class="weui-cell__hd">
-                          <view class="weui-label" wx:if="{{isOwner}}">我的姓名</view>
-                          <view class="weui-label" wx:if="{{!isOwner}}">组织者</view>
+                          <view class="weui-label">组织者:</view>
                       </view>
-
-                      <view class="weui-cell__bd">
-                          <input class="weui-input"  bindblur="getContactName" value="{{name}}" type="text" confirm-type='next' placeholder="请输入我的姓名"/>
-                      </view>
+                      <view class="weui-cell__bd">{{owner_name}}</view>
                     </view>
-                
+
                     <block wx:if="{{isOwner}}">
                       <view class="btn-area" wx:if="{{hasPast}}">
                           <button type="primary"  wx:if="{{hasPast}}" bindtap="reSchedule">再次约战</button>
                       </view>
                       <view class="btn-area" wx:else>
-                          <button open-type="share" type="primary">邀请他人</button>
-                          <button bindtap="gotoGiveup" wx:if="{{hasJoined}}">我要闹眼子</button>
                           <button form-type="submit" wx:if="{{!hasJoined}}">我要参加</button>
+                          <button type="primary" open-type="share" type="primary">邀请他人</button>
+                          <button type="warn" bindtap="gotoGiveup" wx:if="{{hasJoined}}">我要闹眼子</button>
                       </view>
                     </block>
                     <block wx:else>
                       <view class="btn-area" wx:if="{{hasPast}}">
-                          <button type="primary"  wx:if="{{hasPast}}" bindtap="reSchedule">我要约战</button>
+                          <button type="primary"  wx:if="{{hasPast}}" bindtap="reSchedule">我也约在这里</button>
                       </view>
                       <view class="btn-area" wx:else>
-                          <button bindtap="gotoGiveup" wx:if="{{hasJoined}}">我要闹眼子</button>
                           <button form-type="submit" type="primary" wx:if="{{!hasJoined}}">我要参加</button>
-                          <button open-type="share">邀请他人</button>
+                          <button type="primary" open-type="share">邀请他人</button>
+                          <button type="warn" bindtap="gotoGiveup" wx:if="{{hasJoined}}">我要闹眼子</button>
                       </view>
                     </block>
                 </form>

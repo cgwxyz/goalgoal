@@ -2,31 +2,66 @@
 <view class="page">
     <view class="page__hd">
         <view class="page__title">历史记录</view>
-        <view class="page__desc">我发起的活动</view>
     </view>
 
     <view class="page__bd">
-    <block wx:for="{{host_list}}" wx:for-item="hinfo" wx:key="t_add">
-       <view class="weui-panel weui-panel_access">
-            <view class="weui-panel__hd">{{hinfo.date}} {{hinfo.time}}
-              <block wx:if="{{hinfo.hasPast}}"><view class="weui-badge" style="margin-left: 5px;">已过期</view></block>
-            </view>
-            <view class="weui-panel__bd">
-                <view class="weui-media-box weui-media-box_small-appmsg">
-                    <view class="weui-cells weui-cells_in-small-appmsg">
-                        <navigator url="../join/join?pid={{hinfo._id.$oid}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                            <view class="weui-cell__bd weui-cell_primary">
-                                <view>{{hinfo.area}}</view>
-                            </view>
-                            <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-                        </navigator>
-                    </view>
+      <view class="weui-tab">
+        <view class="weui-navbar">
+            <block wx:for="{{tabs}}" wx:key="*this">
+                <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
+                    <view class="weui-navbar__title">{{item}}</view>
                 </view>
+            </block>
+            <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+        </view>
+        <view class="weui-tab__panel">
+            <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+                <block wx:for="{{host_list}}" wx:for-item="hinfo" wx:key="t_add">
+                  <view class="weui-panel weui-panel_access">
+                        <view class="weui-panel__hd">{{hinfo.date}} {{hinfo.time}}
+                          <block wx:if="{{hinfo.hasPast}}"><view class="weui-badge" style="margin-left: 5px;">已过期</view></block>
+                        </view>
+                        <view class="weui-panel__bd">
+                            <view class="weui-media-box weui-media-box_small-appmsg">
+                                <view class="weui-cells weui-cells_in-small-appmsg">
+                                    <navigator url="../join/join?pid={{hinfo._id.$oid}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                                        <view class="weui-cell__bd weui-cell_primary">
+                                            <view>{{hinfo.area}}</view>
+                                        </view>
+                                        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+                                    </navigator>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                  </block>
+            </view>
+            <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                <block wx:for="{{join_list}}" wx:for-item="jinfo" wx:key="t_add">
+                  <view class="weui-panel weui-panel_access">
+                        <view class="weui-panel__hd">{{jinfo.date}} {{jinfo.time}}
+                          <block wx:if="{{jinfo.hasPast}}"><view class="weui-badge" style="margin-left: 5px;">已过期</view></block>
+                        </view>
+                        <view class="weui-panel__bd">
+                            <view class="weui-media-box weui-media-box_small-appmsg">
+                                <view class="weui-cells weui-cells_in-small-appmsg">
+                                    <navigator url="../join/join?pid={{jinfo._id.$oid}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                                        <view class="weui-cell__bd weui-cell_primary">
+                                            <view>{{jinfo.area}}</view>
+                                        </view>
+                                        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+                                    </navigator>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                  </block>
             </view>
         </view>
-      </block>
-      </view>
-    <view >
+</view>
+</view>
+
+    <view>
         <loading wx:if="{{showLoading}}">加载中</loading>
     </view>
     

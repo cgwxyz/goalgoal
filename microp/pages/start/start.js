@@ -61,11 +61,20 @@ Page({
     wx.hideShareMenu()
     var that = this
     that.cancelLoading()
-    that.setData({
-      host_name:app.globalData.userInfo.nickName,
-      area: options.area,
-      latitude: options.latitude,
-      longitude: options.longitude
+    app.fetchOpenId().then(() => {
+      console.log('get openid done')
+      return app.retrieveUinfo()
+    }).then(() => {
+      console.log('goto fetch detail')
+      var app_data = app.globalData;
+      that.setData({
+        host_name: app.globalData.userInfo.nickName,
+        area: options.area,
+        latitude: options.latitude,
+        longitude: options.longitude
+      })
+    }).catch(function (err) {
+      console.log('获取用户信息失败:' + err)
     })
   },
 
@@ -251,5 +260,8 @@ Page({
     });
     console.log(e.detail.value);
     console.log(curr_inputed)
+  },
+  onPullDownRefresh: function () {
+    wx.stopPullDownRefresh()
   }
 })

@@ -59,6 +59,20 @@ Page({
         openId: app_data.openId
       })
       that.retrieveMember(that, app_data, that.data.options['pid'], app_data.openId)
+      .then(function(rs){
+        //do nothing
+      })
+      .catch(function(err){
+        wxShowModal({
+          title: '操作提示',
+          content: err,
+          showCancel: false
+        }).then(function (res) {
+          //donothing
+        }).catch(function (err) {
+          //donothing
+        })
+      })
     }).catch(function (err) {
       console.log('获取用户信息失败:' + err)
     })
@@ -77,36 +91,16 @@ Page({
     }).then(function (res) {
       that.cancelLoading()
       if (res.data.code == 200) {
-        var tmp_list = []
-        for(var i=0;i<5;i++){
-          tmp_list.push(res.data.joined_list[0])
-        }
         that.setData({
-          //joined_ulist: res.data.joined_list
-          joined_ulist: tmp_list
+          joined_ulist: res.data.joined_list
         })
+        return Promise.resolve('ok');
       } else {
-        wxShowModal({
-          title: '操作提示',
-          content: res.data.msg,
-          showCancel: false
-        }).then(function (res) {
-          //donothing
-        }).catch(function (err) {
-          //donothing
-        })
+        return Promise.reject(res.data.msg);
       }
     }).catch(function (err) {
       that.cancelLoading()
-      wxShowModal({
-        title: '操作提示',
-        content: err,
-        showCancel: false
-      }).then(function (res) {
-        //donothing
-      }).catch(function (err) {
-        //donothing
-      })
+      return Promise.reject(res.data.msg);
     })
   },
 
@@ -138,11 +132,22 @@ Page({
   
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
   onPullDownRefresh: function () {
-  
+    var that = this;
+    wx.showNavigationBarLoading() //在标题栏中显示加载
+    //模拟加载
+    var app_data = app.globalData;
+    that.retrieveMember(that,
+      app_data,
+      that.data.options['pid'],
+      app_data.openId)
+      .then(function (rs) {
+        wx.stopPullDownRefresh() //停止下拉刷新
+        wx.hideNavigationBarLoading() //完成停止加载
+      }).catch(function (err) {
+        wx.stopPullDownRefresh() //停止下拉刷新
+        wx.hideNavigationBarLoading() //完成停止加载
+      })
   },
 
   /**

@@ -3,9 +3,9 @@ const app = getApp()
 const util = require('../../static/js/libs/util')
 const wxRequest = util.wxPromisify(wx.request)
 const wxShowModal = util.wxPromisify(wx.showModal)
+const wxStartPullDownRefresh = util.wxPromisify(wx.startPullDownRefresh)
 
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -17,6 +17,7 @@ Page({
     hasJoined:false,
     pid:'',
     openId:'',
+    owner_name:'',
     name:'',
     avatar:'',
     sche_date:'',
@@ -90,7 +91,8 @@ Page({
           'content-type': 'application/x-www-form-urlencoded' // 默认值
         }
     }).then(function(res){
-        console.log('get detail:'+res)
+        console.log('get detail:')
+        console.log(res)
         if (res.data.code == 200) {
           that.cancelLoading()
           var tmp_markers = [{
@@ -109,18 +111,22 @@ Page({
             sche_area: res.data.schedule.area,
             sche_latitude: res.data.schedule.latitude,
             sche_longitude: res.data.schedule.longitude,
+            owner_name: res.data.schedule.contact,
             markers: tmp_markers,
             hasJoined: res.data.joined,
             hasPast: res.data.hasPast,
             isOwner: res.data.isOwner,
             joined_ulist: res.data.joined_list
           })
+          return Promise.resolve('ok')
         } else {
           that.showDialog("错误，" + res.data.msg)
+          return Promise.reject("错误，" + res.data.msg)
         }
       }).catch(function(err){
         console.log('failed:'+err)
         that.cancelLoading()
+        return Promise.reject("错误，" + res.data.msg)
       })
   },
 
@@ -326,6 +332,23 @@ Page({
       })
     }).catch(function(res){
       //cancel donothing
+    })
+  },
+  onPullDownRefresh: function () {
+    var that = this;
+    wx.showNavigationBarLoading() //在标题栏中显示加载
+    //模拟加载
+    var app_data = app.globalData;
+    that.retrieveDetail(that, 
+        app_data,
+        that.data.options['pid'], 
+        app_data.openId)
+    .then(function(rs){
+      wx.stopPullDownRefresh() //停止下拉刷新
+      wx.hideNavigationBarLoading() //完成停止加载
+    }).catch(function(err){
+      wx.stopPullDownRefresh() //停止下拉刷新
+      wx.hideNavigationBarLoading() //完成停止加载
     })
   }
 })
